@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SimpleCart {
-
-    long customerID;
+    long coustomerID;
     long productID;
     int Quantity;
 
