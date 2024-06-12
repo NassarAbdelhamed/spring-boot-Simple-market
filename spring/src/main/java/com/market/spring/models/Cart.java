@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Table(name ="cart" )
 @Data
@@ -27,4 +29,7 @@ public class Cart {
 
     @Column(nullable = false)
     private int quantity;
+
+    @Column(name = "cartDate",nullable = false)
+    private Date date;
 }

@@ -15,7 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,29 +48,22 @@ public class CartService {
         cart.setCustomer(customer);
         cart.setProduct(product);
         cart.setQuantity(addCartRequest.getQuantity());
+        cart.setDate(new Date(System.currentTimeMillis()));
         return cartRepository.save(cart);
     }
 
-//    private CartDto convertToDto(Cart cart) {
-//        return new CartDto(
-//                cart.getId(),
-//                cart.getCustomer().getId(),
-//                cart.getProduct().getId(),
-//                cart.getQuantity()
-//        );
-//    }
-
     public CartResponce findAll() {
        long id = CurrentID();
-            Customer customer = customerRepository.findById(id).get();
-            List<Cart> cartList= cartRepository.findByCustomer(customer);
-            CartResponce cartResponce =new CartResponce();
-            cartResponce.setName(customer.getName());
-            List<ProductList> list=new ArrayList<>();
-            for ( Cart i : cartList){
-                list.add(new ProductList(i.getId(),i.getProduct().getName(),i.getQuantity()));
-            }
-            cartResponce.setProudcts(list);
-            return cartResponce;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+         Customer customer = customerRepository.findById(id).get();
+        List<Cart> cartList= cartRepository.findByCustomer(customer);
+        CartResponce cartResponce =new CartResponce();
+        cartResponce.setName(customer.getName());
+        List<ProductList> list=new ArrayList<>();
+        for ( Cart i : cartList){
+            list.add(new ProductList(sdf.format(i.getDate()),i.getProduct().getName(),i.getQuantity()));
+        }
+        cartResponce.setProudcts(list);
+        return cartResponce;
     }
 }

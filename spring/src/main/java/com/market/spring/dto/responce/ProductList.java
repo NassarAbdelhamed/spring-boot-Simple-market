@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductList {
-    long CartId;
+    String formatDate;
     String ProductName;
     int quantity;
 }
