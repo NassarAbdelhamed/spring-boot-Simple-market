@@ -6,6 +6,8 @@ import com.market.spring.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,26 +41,25 @@ public class AuthenticationService {
         customer.setPassword(passwordEncoder.encode(request.getPassword()));
         customer.setRole(request.getRole());
         userRepository.save(customer);
+        saveContext(customer.getUsername(),request.getPassword());
         String token = jwtService.generateToken(customer, generateExtraClaims(customer));
-        System.out.println("id= "+customer.getId());
         return  new AuthenticationResponse(token);
     }
 
-
-
-
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                authenticationRequest.getUsername(), authenticationRequest.getPassword()
-        );
-        authenticationManager.authenticate(authToken);
+        saveContext(authenticationRequest.getUsername(),authenticationRequest.getPassword());
         Customer customer= userRepository.findByUsername(authenticationRequest.getUsername()).get();
         String jwt = jwtService.generateToken(customer, generateExtraClaims(customer));
-        System.out.println("id= "+customer.getId());
         return new AuthenticationResponse(jwt);
     }
 
-
+    private  void saveContext(String username,String password){
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                username, password
+        );
+        Authentication authentication =authenticationManager.authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
 
     private Map<String, Object> generateExtraClaims(Customer customer) {

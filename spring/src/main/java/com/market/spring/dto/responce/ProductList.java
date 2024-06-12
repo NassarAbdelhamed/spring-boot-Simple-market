@@ -1,4 +1,4 @@
-package com.market.spring.dto.request;
+package com.market.spring.dto.responce;
 
 
 import lombok.AllArgsConstructor;
@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SimpleCart {
-    long coustomerID;
-    long productID;
-    int Quantity;
-
+public class ProductList {
+    long CartId;
+    String ProductName;
+    int quantity;
 }
