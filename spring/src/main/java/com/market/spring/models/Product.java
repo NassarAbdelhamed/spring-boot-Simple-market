@@ -24,6 +24,13 @@ public class Product {
     @Column(nullable = false)
     private double price;
 
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private boolean isValid;
+
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Cart> carts;
 }

@@ -40,8 +40,10 @@ public class SecurityFilter {
                     authConfig.requestMatchers("/error").permitAll();
                     authConfig.requestMatchers(HttpMethod.GET ,"/customer/**").permitAll();
 
-                    authConfig.requestMatchers(HttpMethod.GET, "/product").hasAuthority(Permission.READ_ALL_PRODUCTS.name());
-                    authConfig.requestMatchers(HttpMethod.POST, "/product").hasAuthority(Permission.SAVE_ONE_PRODUCT.name());
+                    authConfig.requestMatchers(HttpMethod.GET, "/product/**").hasAuthority(Permission.READ_ALL_PRODUCTS.name());
+                    authConfig.requestMatchers(HttpMethod.POST, "/product/**").hasAuthority(Permission.SAVE_ONE_PRODUCT.name());
+                    authConfig.requestMatchers(HttpMethod.PUT, "/product/**").hasAuthority(Permission.SAVE_ONE_PRODUCT.name());
+                    authConfig.requestMatchers(HttpMethod.PATCH, "/product/**").hasAuthority(Permission.SAVE_ONE_PRODUCT.name());
 
                     authConfig.requestMatchers(HttpMethod.GET, "/cart/**").hasAuthority(Permission.READ_ALL_PRODUCTS.name());
                     authConfig.requestMatchers(HttpMethod.POST, "/cart/**").hasAuthority(Permission.READ_ALL_PRODUCTS.name());

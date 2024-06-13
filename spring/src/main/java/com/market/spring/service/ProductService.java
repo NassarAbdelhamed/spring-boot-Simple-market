@@ -1,5 +1,6 @@
 package com.market.spring.service;
 
+import com.market.spring.dto.request.ProductUpgrade;
 import com.market.spring.models.Product;
 import com.market.spring.models.customer.Customer;
 import com.market.spring.repository.CustomerRepository;
@@ -25,13 +26,22 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public Product upgrade(long id, ProductUpgrade productUpgrade){
+        Product product=productRepository.findById(id).get();
+        product.setName(productUpgrade.getName());
+        product.setPrice(productUpgrade.getPrice());
+        product.setDescription(productUpgrade.getDescription());
+        product.setValid(productUpgrade.isValid());
+        return productRepository.save(product);
+    }
+
+    public Product changeValid(long id){
+        Product product=productRepository.findById(id).get();
+        product.setValid(!product.isValid());
+        return productRepository.save(product);
+    }
+
     public List<Product> allProduct() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            Object principal = authentication.getPrincipal();
-//            Customer customer=customerRepository.findByUsername(principal.toString()).get();
-//            System.out.println(customer.getId()+ " : "+customer.getName());
-//        }
         return productRepository.findAll();
     }
 }

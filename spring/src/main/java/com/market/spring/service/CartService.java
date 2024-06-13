@@ -45,11 +45,16 @@ public class CartService {
         Cart cart=new Cart();
         Customer customer= customerRepository.findById(id).get();
         Product product=productRepository.findById(addCartRequest.getProductID()).get();
-        cart.setCustomer(customer);
-        cart.setProduct(product);
-        cart.setQuantity(addCartRequest.getQuantity());
-        cart.setDate(new Date(System.currentTimeMillis()));
-        return cartRepository.save(cart);
+        if(product.isValid()) {
+            cart.setCustomer(customer);
+            cart.setProduct(product);
+            cart.setQuantity(addCartRequest.getQuantity());
+            cart.setDate(new Date(System.currentTimeMillis()));
+            return cartRepository.save(cart);
+        }
+        else {
+            throw new RuntimeException();
+        }
     }
 
     public CartResponce findAll() {

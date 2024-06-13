@@ -42,6 +42,7 @@ public class AuthenticationService {
         customer.setRole(request.getRole());
         userRepository.save(customer);
         saveContext(customer.getUsername(),request.getPassword());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         String token = jwtService.generateToken(customer, generateExtraClaims(customer));
         return  new AuthenticationResponse(token);
     }
