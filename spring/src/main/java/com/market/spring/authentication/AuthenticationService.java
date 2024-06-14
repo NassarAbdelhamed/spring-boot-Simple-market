@@ -4,6 +4,7 @@ import com.market.spring.config.JwtService;
 import com.market.spring.models.customer.Customer;
 import com.market.spring.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,22 +13,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class AuthenticationService {
 
-   @Autowired
-   private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-   @Autowired
-   private CustomerRepository userRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
-   @Autowired
-   private JwtService jwtService;
+    @Autowired
+    private JwtService jwtService;
 
 
-   private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+
+  // Set of all logout JWT
+   public static Set<String> tokenBlacklist = new HashSet<>();
 
     public AuthenticationService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -35,31 +42,31 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse register(Customer request){
-        Customer customer = new Customer();
+        var customer = new Customer();
         customer.setName(request.getName());
         customer.setUsername(request.getUsername());
         customer.setPassword(passwordEncoder.encode(request.getPassword()));
         customer.setRole(request.getRole());
-        userRepository.save(customer);
-        saveContext(customer.getUsername(),request.getPassword());
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        customerRepository.save(customer);
         String token = jwtService.generateToken(customer, generateExtraClaims(customer));
         return  new AuthenticationResponse(token);
     }
 
+
+
+
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest){
-        saveContext(authenticationRequest.getUsername(),authenticationRequest.getPassword());
-        Customer customer= userRepository.findByUsername(authenticationRequest.getUsername()).get();
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                authenticationRequest.getUsername(), authenticationRequest.getPassword()
+        );
+        authenticationManager.authenticate(authToken);
+        Customer customer = customerRepository.findByUsername(authenticationRequest.getUsername()).get();
         String jwt = jwtService.generateToken(customer, generateExtraClaims(customer));
         return new AuthenticationResponse(jwt);
     }
 
-    private  void saveContext(String username,String password){
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                username, password
-        );
-        Authentication authentication =authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    public void logout(String token) {
+        tokenBlacklist.add(token.split(" ")[1]);
     }
 
 
@@ -69,4 +76,9 @@ public class AuthenticationService {
         extraClaims.put("role", customer.getRole().name());
         return extraClaims;
     }
+
+    public  static boolean isTokenBlacklisted(String token) {
+        return tokenBlacklist.contains(token);
+    }
+
 }

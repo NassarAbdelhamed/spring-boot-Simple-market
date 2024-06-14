@@ -1,17 +1,20 @@
 package com.market.spring.config;
 
+import com.market.spring.authentication.AuthenticationService;
 import com.market.spring.models.customer.Customer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.crypto.JwtSigner;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -51,5 +54,24 @@ public class JwtService {
                 .parseClaimsJws(jwt).getBody();
     }
 
+
+    // Clean tokenBlacklist every hour to make its size as small as possible
+    @Scheduled(cron = "0 0 * * * ?")
+    public void CleanTokenBlacklist() {
+        List<String> forDelete=new ArrayList<>();
+      for (String i :AuthenticationService.tokenBlacklist){
+            try {
+                extractAllClaims(i);
+            }
+            catch (Exception e){
+                forDelete.add(i);
+            }
+      }
+      for(String i :forDelete) {
+          AuthenticationService.tokenBlacklist.remove(i);
+      }
+        forDelete.clear();
+        System.out.println("Clean is done!");
+    }
 
 }

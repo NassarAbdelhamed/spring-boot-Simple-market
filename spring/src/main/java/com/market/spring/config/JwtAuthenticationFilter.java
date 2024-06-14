@@ -1,5 +1,6 @@
 package com.market.spring.config;
 
+import com.market.spring.authentication.AuthenticationService;
 import com.market.spring.models.customer.Customer;
 import com.market.spring.repository.CustomerRepository;
 import jakarta.servlet.FilterChain;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,13 +26,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private CustomerRepository customerRepository;
 
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // 1 obtain header that contains jwt
         String authHeader = request.getHeader("Authorization"); // Bearer jwt
 
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+        if(
+                authHeader == null || !authHeader.startsWith("Bearer ") ||AuthenticationService.isTokenBlacklisted(authHeader.split(" ")[1])
+        ){
             filterChain.doFilter(request, response);
             return;
         }

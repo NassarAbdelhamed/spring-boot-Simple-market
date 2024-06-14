@@ -42,6 +42,7 @@ public class ProductService {
     }
 
     public List<Product> allProduct() {
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         return productRepository.findAll();
     }
 }
