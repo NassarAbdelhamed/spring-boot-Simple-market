@@ -1,16 +1,14 @@
 package com.market.spring.config;
 
-import com.market.spring.authentication.AuthenticationService;
+import com.market.spring.service.AuthenticationService;
 import com.market.spring.models.customer.Customer;
 import com.market.spring.repository.CustomerRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;

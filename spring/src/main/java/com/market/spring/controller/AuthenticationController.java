@@ -1,6 +1,8 @@
-package com.market.spring.authentication;
+package com.market.spring.controller;
 
-import com.market.spring.models.customer.Customer;
+import com.market.spring.dto.request.AuthenticationRequest;
+import com.market.spring.dto.responce.AuthenticationResponse;
+import com.market.spring.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +19,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody Customer request) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 

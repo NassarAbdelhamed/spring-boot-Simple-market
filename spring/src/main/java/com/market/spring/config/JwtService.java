@@ -1,6 +1,6 @@
 package com.market.spring.config;
 
-import com.market.spring.authentication.AuthenticationService;
+import com.market.spring.service.AuthenticationService;
 import com.market.spring.models.customer.Customer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

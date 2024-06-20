@@ -1,14 +1,14 @@
-package com.market.spring.authentication;
+package com.market.spring.service;
 
 import com.market.spring.config.JwtService;
+import com.market.spring.dto.request.AuthenticationRequest;
+import com.market.spring.dto.responce.AuthenticationResponse;
 import com.market.spring.models.customer.Customer;
+import com.market.spring.models.customer.Role;
 import com.market.spring.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,12 +41,12 @@ public class AuthenticationService {
     }
 
 
-    public AuthenticationResponse register(Customer request){
+    public AuthenticationResponse register(AuthenticationRequest request){
         var customer = new Customer();
         customer.setName(request.getName());
         customer.setUsername(request.getUsername());
         customer.setPassword(passwordEncoder.encode(request.getPassword()));
-        customer.setRole(request.getRole());
+        customer.setRole(Role.CUSTOMER);
         customerRepository.save(customer);
         String token = jwtService.generateToken(customer, generateExtraClaims(customer));
         return  new AuthenticationResponse(token);
