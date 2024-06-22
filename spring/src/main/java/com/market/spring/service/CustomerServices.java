@@ -16,6 +16,6 @@ public class CustomerServices {
     public Profile getInfo(){
         Object principal=SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Customer customer=customerRepository.findByUsername(principal.toString()).get();
-        return new Profile(customer.getName(),customer.getUsername());
+        return new Profile(customer.getName(),customer.getUsername(),customer.getRole());
     }
 }
