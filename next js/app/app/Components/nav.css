@@ -1,0 +1,30 @@
+.nav {
+    background-color: #eef1f5; 
+    padding: 20px;           
+    border-bottom: 2px solid #e9ecef; 
+    display: flex;           
+    justify-content: space-between; 
+    align-items: center;      
+}
+
+.nav h1 {
+    margin: 0;               
+    font-size: 24px;          
+    color: #343a40;           
+}
+
+.nav .links {
+    display: flex;            
+    gap: 15px;                
+}
+
+.nav .links a {
+    text-decoration: none;   
+    color: #007bff;          
+    font-size: 16px;          
+    transition: color 0.3s;   
+}
+
+.nav .links a:hover {
+    color: #0056b3;          
+}

@@ -1,0 +1,25 @@
+.adminNav {
+    background-color: #c75be2;
+    padding: 20px;           
+    border: 2px solid #491346; 
+    display: flex;           
+    justify-content: space-between; 
+    align-items: center;
+}
+
+
+.adminNav .links {
+    display: flex;            
+    gap: 15px;                
+}
+
+.adminNav .links a {
+    text-decoration: none;   
+    color: #efe3ef;          
+    font-size: 16px;          
+    transition: color 0.3s;   
+}
+
+.adminNav .links a:hover {
+    color: #670867;          
+}
